@@ -1,7 +1,7 @@
 esphome:
   name: "wpf07c"
   friendly_name: wpf07c
-  #min_version: 2024.12.0
+  min_version: 2024.11.0
   name_add_mac_suffix: false
   platformio_options:
    build_flags:
@@ -47,7 +47,6 @@ esp32:
   board: wt32-eth01
   framework:
     type: arduino
-    version: latest
 
 time:
   - platform: sntp
@@ -891,25 +890,6 @@ sensor:
     readSignal(&CanMembers[cm_manager], GetElsterIndex("FATAL_ERROR"));
     return {};
 
-- platform: wifi_signal
-  name: WiFi Signal dBm
-  icon: mdi:wifi
-  update_interval: 60s
-  id: wifi_dbm
-- platform: template
-  name: WiFi Signal
-  icon: mdi:signal
-  unit_of_measurement: '%'
-  update_interval: 60s
-  id: wifi_percentage
-  lambda: |-
-    float dBm = id(wifi_dbm).state;
-    float MIN_DBM = -100.0; // Minimum RSSI in dBm
-    float MAX_DBM = -30.0; // Maximum RSSI in dBm
-    if (dBm < MIN_DBM) dBm = MIN_DBM;
-    if (dBm > MAX_DBM) dBm = MAX_DBM;
-    return ((dBm - MIN_DBM) / (MAX_DBM - MIN_DBM)) * 100;
-
 #Warmwasser-Temperaturabfrage
 - platform: template
   name: "STORAGE_TANK_INTERNAL_TEMP"
@@ -1228,14 +1208,14 @@ spi:
 #                                       #
 #########################################
 canbus:
-  - platform: mcp2515
-    id: my_mcp2515
-    spi_id: McpSpi
-    cs_pin: GPIO4
-    can_id: 680
-    use_extended_id: false
-    bit_rate: 20kbps
-    on_frame:
+- platform: mcp2515
+  id: my_mcp2515
+  spi_id: McpSpi
+  cs_pin: GPIO4
+  can_id: 0x680
+  use_extended_id: false
+  bit_rate: 20kbps
+  on_frame:
 
 #CAN id: cm_pump
   - can_id: 0x180
